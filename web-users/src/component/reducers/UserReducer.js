@@ -18,7 +18,7 @@ const defaultValue = {
 const initialState = {
     form:{...defaultValue},
     content:[],
-    isLoading: false
+    isLoading: true
 }
 
 export default function UserReducer (state = initialState,action) {
@@ -27,15 +27,15 @@ export default function UserReducer (state = initialState,action) {
         case SET_LOADING:
             return {...state, isLoading: true}
         case HANDLE_INPUT:
-            const form = {...state.form}
+            const {form} = state
             const {inputName,inputValue} = payload
             form[inputName] = inputValue
-            return {...state,form: form}
+            return {...state,form:{...form}}
         case HANDLE_EDIT:
             const editedForm = state.content.find((user) => user.id === payload)
-            return {...state,form: editedForm}
+            return {...state,form: {...editedForm}}
         case SUBMIT_COMPLETE:
-            return {...state,form: {...initialState},isLoading: false}
+            return {...state,form: {...defaultValue},isLoading: false}
         case FETCH_COMPLETE:
             console.log(state.content)
             return {...state,isLoading: false, content: [...payload]}

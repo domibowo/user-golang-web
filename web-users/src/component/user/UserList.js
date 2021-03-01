@@ -16,8 +16,9 @@ import Icon from "../../shared/icons/Icon";
 
 function UserList (props) {
 
+    const {setLoading,fetchComplete,handleEdit,history,content,isLoading} = props;
+    
     const loadData = () =>{
-        const {setLoading,fetchComplete} = props
         setLoading()
         getAllUsers()
             .then((content)=>{
@@ -30,16 +31,12 @@ function UserList (props) {
     },[])
 
     const handleEditButton = (id) =>{
-        const {handleEdit,history} = props
-
         handleEdit(id)
-
         history.replace("/user/form")
 
     }
 
     const generateTableRow = () =>{
-        const {content,isLoading} = props
         let rows = (
             <tr>
                 <td><Spinner className="text-center" type="grow" aria-colspan={6} color="info"/></td>
@@ -63,12 +60,9 @@ function UserList (props) {
                         <td>{user.job}</td>
                         <td>{user.education}</td>
                         <td>
-                            <Button type="button" color="info">Info</Button>
-                        </td>
-                        <td>
                             <Button type="button" color="warning" className="shadow"
                                     onClick={()=>handleEditButton(user.id)}
-                            >Edit</Button>
+                            >Edit?</Button>
                         </td>
                     </tr>
                 )
@@ -82,7 +76,7 @@ function UserList (props) {
             <CardHeader tag="strong">
                 <Row>
                     <Col >
-                        <Link to="/form">
+                        <Link to="/user/form">
                             <Button color="primary" className="shadow"><Icon icon="fas plus"></Icon> Add</Button>
                         </Link>
                     </Col>
@@ -91,7 +85,7 @@ function UserList (props) {
                     </Col>
                 </Row>
             </CardHeader>
-            <Table striped hover responsive className="m-0">
+            <Table striped hover responsive className="m-0" size="md">
                 <thead>
                     <tr>
                         <th width="5%">No.</th>
@@ -100,7 +94,7 @@ function UserList (props) {
                         <th>NIK</th>
                         <th>Pekerjaan</th>
                         <th>Pendidikan Terakhir</th>
-                        <th colSpan={2} width="15%" className="text-center">Aksi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>

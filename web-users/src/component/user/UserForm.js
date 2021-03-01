@@ -1,13 +1,19 @@
-import React, { useState } from 'react'
-import {HANDLE_INPUT,FETCH_COMPLETE,SUBMIT_COMPLETE,RESET_FORM,SET_LOADING} from '../actions/UserAction'
+import React from 'react'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import {HANDLE_INPUT,SUBMIT_COMPLETE,RESET_FORM,SET_LOADING} from '../actions/UserAction'
+import * as Service from '../../services/UserService'
+import {Card,CardHeader,CardBody,Form,FormGroup,Label,Input,Button,Col} from 'reactstrap'
+import Icon from '../../shared/icons/Icon'
 
 function UserForm(props) {
 
-    const [isSubmit,setIsSubmit] = useState(false)
+    const {history,reset,form,submit,handleInput,isLoading} = props
 
     const isValid = () => {
-        const {isLoading,form} = props
-        return (form.name.trim().length > 0 && form.birth_date.trim().length > 0) || !isLoading
+        return (form.name.trim().length > 0 && form.birth_date && form.identity_number.trim().length > 0 &&
+            form.job !== (<option default> ---PILIH--- </option>) && 
+            form.education !== (<option default> ---PILIH--- </option>)) || !isLoading
     }
 
 
@@ -30,11 +36,71 @@ function UserForm(props) {
     }
 
     const handleReturn = () => {
-        const {history}
+        reset()
+        history.replace('/user')
+    }
+
+    const handleSubmit = (e) => {
+        
+        e.preventDefault()
+        console.log(form)
+        if(form.id){
+            Service.editUser(form).then(() => {
+                submit(form)
+                handleReturn()
+            })
+        } else {
+            Service.addUser(form).then(() => {
+                submit(form)
+                handleReturn()
+            })
+        }
     }
 
     return(
-
+        <Card className="shadow">
+            <CardHeader tag="strong" className="text-center">{!form.id ? "Insert New User" : "Edit User"}</CardHeader>
+            <CardBody className="p-3">
+            <Form onChange={handleSubmit}>
+                <FormGroup>
+                    <Label for="name">Nama User</Label>
+                    <Input type="text" name="name" id="name" value={form.name} onChange={(event) => handleInput('name',event.target.value)}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="birth_date">Tanggal Lahir</Label>
+                    <Input type="date" name="birth_date" id="birth_date" value={form.birth_date} onChange={(event) => handleInput('birth_date', event.target.value)}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="identity_number">NIK</Label>
+                    <Input type="text" name="identity_number" id="identity_number" value={form.identity_number} onChange={(event) => handleInput('identity_number',event.target.value)}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="job">Pekerjaan</Label>
+                    <Input type="select" name="job" id="job" value={form.job} onChange={(event) => handleInput('job', event.target.value)}>
+                        <option default> ---PILIH--- </option>
+                        {optionJob()}
+                    </Input>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="education">Pendidikan Terakhir</Label>
+                    <Input type="select" name="education" id="education" value={form.education} onChange={(event) => handleInput('education', event.target.value)}>
+                        <option default> ---PILIH--- </option>
+                        {optionEducation()}
+                    </Input>
+                </FormGroup>
+                <FormGroup row>
+                    <Col sm={{ size: 9, offset: 3 }}>
+                        <Button type="submit" color="success" disabled={!isValid()}>
+                            <Icon icon='fas paper-plane'/> Save User
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button type='reset' color='secondary' onClick={handleReturn}>Return</Button>
+                    </Col>
+                </FormGroup>
+                </Form>
+            </CardBody>
+        </Card>
     )
 }
 
@@ -45,6 +111,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         handleInput: (inputName,inputValue) => dispatch({type:HANDLE_INPUT, payload: {inputName, inputValue}}),
-        reset: () => dispatch({type:RESET_FORM})
+        reset: () => dispatch({type:RESET_FORM}),
+        submit: () => dispatch({type:SUBMIT_COMPLETE}),
+        loading: () => dispatch({type:SET_LOADING})
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserForm))
