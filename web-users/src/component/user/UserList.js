@@ -17,7 +17,7 @@ import Icon from "../../shared/icons/Icon";
 function UserList (props) {
 
     const {setLoading,fetchComplete,handleEdit,history,content,isLoading} = props;
-    
+
     const loadData = () =>{
         setLoading()
         getAllUsers()
@@ -53,16 +53,16 @@ function UserList (props) {
             rows = content.map((user,index)=>{
                 return(
                     <tr key={index}>
-                        <th scope="row">{index+1}</th>
+                        <th scope="row" className="text-center">{index+1}</th>
                         <td>{user.name}</td>
-                        <td>{user.birth_date}</td>
-                        <td>{user.identity_number}</td>
-                        <td>{user.job}</td>
-                        <td>{user.education}</td>
-                        <td>
+                        <td className="text-center">{user.birth_date}</td>
+                        <td className="text-center">{user.identity_number}</td>
+                        <td className="text-center">{user.job}</td>
+                        <td className="text-center">{user.education}</td>
+                        <td className="text-center">
                             <Button type="button" color="warning" className="shadow"
                                     onClick={()=>handleEditButton(user.id)}
-                            >Edit?</Button>
+                            ><Icon icon="fas user-edit"/></Button>
                         </td>
                     </tr>
                 )
@@ -88,13 +88,13 @@ function UserList (props) {
             <Table striped hover responsive className="m-0" size="md">
                 <thead>
                     <tr>
-                        <th width="5%">No.</th>
-                        <th>Nama</th>
-                        <th>Tanggal Lahir</th>
-                        <th>NIK</th>
-                        <th>Pekerjaan</th>
-                        <th>Pendidikan Terakhir</th>
-                        <th>Aksi</th>
+                        <th width="5%" className="text-center">No.</th>
+                        <th className="text-center">Nama</th>
+                        <th className="text-center">Tanggal Lahir</th>
+                        <th className="text-center">NIK</th>
+                        <th className="text-center">Pekerjaan</th>
+                        <th className="text-center">Pendidikan Terakhir</th>
+                        <th className="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>

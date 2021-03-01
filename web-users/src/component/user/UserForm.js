@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import {HANDLE_INPUT,SUBMIT_COMPLETE,RESET_FORM,SET_LOADING} from '../actions/UserAction'
 import * as Service from '../../services/UserService'
-import {Card,CardHeader,CardBody,Form,FormGroup,Label,Input,Button,Col} from 'reactstrap'
+import {Card,CardHeader,CardBody,Form,FormGroup,Label,Input,Button,ButtonGroup} from 'reactstrap'
 import Icon from '../../shared/icons/Icon'
 
 function UserForm(props) {
@@ -87,16 +87,14 @@ function UserForm(props) {
                         {optionEducation()}
                     </Input>
                 </FormGroup>
-                <FormGroup row>
-                    <Col sm={{ size: 9, offset: 3 }}>
-                        <Button type="submit" color="success" disabled={!isValid()}>
-                            <Icon icon='fas paper-plane'/> Save User
-                        </Button>
-                    </Col>
-                    <Col>
-                        <Button type='reset' color='secondary' onClick={handleReturn}>Return</Button>
-                    </Col>
-                </FormGroup>
+                <ButtonGroup>
+                    <Button type="submit" color="success" disabled={!isValid()}>
+                        <Icon icon='fas paper-plane'/> Save User
+                    </Button>
+                    <Button type='reset' color='secondary' onClick={handleReturn}>
+                        <Icon icon='fas undo-alt'/> Return
+                    </Button>
+                </ButtonGroup>
                 </Form>
             </CardBody>
         </Card>
