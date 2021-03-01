@@ -31,8 +31,8 @@ func (u UserRepositoryImpl) GetAllUsers()(*[]models.User, error) {
 	return &users, err
 }
 
-func (u UserRepositoryImpl) UpdateUser(user *models.User) (*models.User,error){
-	err := u.db.Model(&user).Updates(user).Error
+func (u UserRepositoryImpl) UpdateUser(id string,user *models.User) (*models.User,error){
+	err := u.db.Model(&user).Where("id = ?",id).Updates(user).Error
 	if err!=nil {
 		log.Fatal(err)
 	}
@@ -42,6 +42,7 @@ func (u UserRepositoryImpl) UpdateUser(user *models.User) (*models.User,error){
 func (u UserRepositoryImpl) GetUserByID(id string) (*models.User,error){
 	var user models.User
 	err := u.db.First(&user, "id = ?", id).Error
+
 	if err!=nil {
 		log.Fatal(err)
 	}

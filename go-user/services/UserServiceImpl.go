@@ -17,8 +17,8 @@ func (u UserServiceImpl) InsertNewUser(user *models.User)(*models.User, error){
 	return (u.userRepositories.InsertNewUser(user))
 }
 
-func (u UserServiceImpl) UpdateUser(user *models.User)(*models.User, error){
-	return u.userRepositories.UpdateUser(user)
+func (u UserServiceImpl) UpdateUser(id string, user *models.User)(*models.User, error){
+	return u.userRepositories.UpdateUser(id,user)
 }
 
 func (u UserServiceImpl) GetUserByID(id string)(*models.User, error){

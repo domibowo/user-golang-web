@@ -1,13 +1,13 @@
 package controller
 
 import (
+	"encoding/json"
+	"log"
+	"net/http"
 	"user/models"
 	"user/services"
 	"user/utils"
-	"net/http"
-	"encoding/json"
 	"github.com/gorilla/mux"
-	"log"
 )
 
 type UserController struct {
@@ -20,7 +20,7 @@ func CreateUserController(r *mux.Router, userService services.UserService){
 	r.HandleFunc("/user", userController.getAllUsers).Methods(http.MethodGet)
 	s := r.PathPrefix("/user").Subrouter()
 	s.HandleFunc("/form", userController.insertNewUser).Methods(http.MethodPost)
-	s.HandleFunc("/form", userController.updateUser).Methods(http.MethodPut)
+	s.HandleFunc("/{id}", userController.updateUser).Methods(http.MethodPut)
 	s.HandleFunc("/{id}", userController.getUserByID).Methods(http.MethodGet)
 
 }
@@ -40,13 +40,16 @@ func (u UserController) insertNewUser(resp http.ResponseWriter, req *http.Reques
 
 func (u UserController) updateUser(resp http.ResponseWriter, req *http.Request){
 
+	params:=mux.Vars(req)
+	id:= params["id"]
+
 	var user models.User
 	err := json.NewDecoder(req.Body).Decode(&user)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	response,err := u.userService.UpdateUser(&user)
+	response,err := u.userService.UpdateUser(id,&user)
 	if err != nil {
 		log.Fatal(err)
 	}
