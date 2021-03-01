@@ -37,7 +37,6 @@ export default function UserReducer (state = initialState,action) {
         case SUBMIT_COMPLETE:
             return {...state,form: {...defaultValue},isLoading: false}
         case FETCH_COMPLETE:
-            console.log(state.content)
             return {...state,isLoading: false, content: [...payload]}
         case RESET_FORM:
             return {...state,form: {...defaultValue}}

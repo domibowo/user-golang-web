@@ -11,16 +11,16 @@ export async function getAllUsers() {
 }
 
 export async function addUser(form) {
-    const response = await client.post("/user/form",form)
+    const response = await client.post("/api/user/form",form)
     return response.data.data
 }
 
 export async function editUser(user) {
-    const response = await client.put(`/user/${user.id}`,user)
+    const response = await client.put(`/api/user/${user.id}`,user)
     return response.data.data
 }
 
 export async function getUser(id) {
-    const response = await client.get(`/user/${id}`,id)
+    const response = await client.get(`/api/user/${id}`,id)
     return response.data.data
 }

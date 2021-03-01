@@ -8,7 +8,7 @@ import Icon from '../../shared/icons/Icon'
 
 function UserForm(props) {
 
-    const {history,reset,form,submit,handleInput,isLoading} = props
+    const {history,reset,form,submit,handleInput,isLoading, loading} = props
 
     const isValid = () => {
         return (form.name.trim().length > 0 && form.birth_date && form.identity_number.trim().length > 0 &&
@@ -40,28 +40,27 @@ function UserForm(props) {
         history.replace('/user')
     }
 
+    const submitData = async () => {
+        if(form.id) return await Service.editUser(form)
+        else return await Service.addUser(form)
+    }
+
     const handleSubmit = (e) => {
         
         e.preventDefault()
         console.log(form)
-        if(form.id){
-            Service.editUser(form).then(() => {
-                submit(form)
-                handleReturn()
-            })
-        } else {
-            Service.addUser(form).then(() => {
-                submit(form)
-                handleReturn()
-            })
-        }
+        loading()
+        submitData().then((content) => {
+            submit(content)
+            handleReturn()
+        })
     }
 
     return(
         <Card className="shadow">
             <CardHeader tag="strong" className="text-center">{!form.id ? "Insert New User" : "Edit User"}</CardHeader>
             <CardBody className="p-3">
-            <Form onChange={handleSubmit}>
+            <Form onSubmit={(event) => handleSubmit(event)}>
                 <FormGroup>
                     <Label for="name">Nama User</Label>
                     <Input type="text" name="name" id="name" value={form.name} onChange={(event) => handleInput('name',event.target.value)}/>
